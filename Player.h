@@ -41,7 +41,7 @@ public:
 
 	Player();
 
-	void spawn(sf::IntRect arena, sf::Vector2f resolution, int tileSize);
+	void spawn(sf::IntRect arena, sf::Vector2u resolution, int tileSize);
 
 	void resetPlayerStats();
 

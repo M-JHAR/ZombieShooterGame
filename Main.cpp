@@ -2,6 +2,8 @@
 
 #include "SFML/Graphics.hpp"
 #include "Player.h"
+#include "ZombieArena.h"
+
 int main()
 {
 	enum class State
@@ -14,13 +16,13 @@ int main()
 
 	State state = State::GAME_OVER;
 
-	sf::Vector2f resolution;
+	sf::Vector2u resolution;
 	resolution.x = sf::VideoMode::getDesktopMode().width;
 	resolution.y = sf::VideoMode::getDesktopMode().height;
 
 	sf::RenderWindow window(sf::VideoMode(resolution.x, resolution.y), "Zombie Shooter", sf::Style::Fullscreen);
 
-	sf::View mainView(sf::FloatRect(0, 0, resolution.x, resolution.y));
+	sf::View mainView(sf::FloatRect(0, 0, (float)resolution.x, (float)resolution.y));
 
 	sf::Clock clock;
 
@@ -33,6 +35,11 @@ int main()
 	Player player;
 
 	sf::IntRect arena;
+
+	sf::VertexArray background;
+
+	sf::Texture textureBackground;
+	textureBackground.loadFromFile("graphics/background_sheet.png");
 
 	while (window.isOpen())
 	{
@@ -139,7 +146,7 @@ int main()
 				arena.left = 0;
 				arena.top = 0;
 
-				int tileSize = 50;
+				int tileSize = createBackground(background, arena);
 
 				player.spawn(arena, resolution, tileSize);
 
@@ -148,8 +155,11 @@ int main()
 		}
 
 
-
-		// UPDATE THE FRAME
+		/*
+		* *************************
+		*	UPDATE THE FRAME
+		* *************************
+		*/
 
 		if (state == State::PLAYING)
 		{
@@ -169,6 +179,39 @@ int main()
 
 			mainView.setCenter(player.getCenter());
 		}
+
+		/*
+		*
+		* ****************
+		*  DRAW THE SCENE
+		* ****************
+		*
+		*/
+
+		if (state == State::PLAYING)
+		{
+			window.clear();
+			window.setView(mainView);
+
+			window.draw(background, &textureBackground);
+
+			window.draw(player.getSprite());
+		}
+		if (state == State::LEVELING_UP)
+		{
+
+		}
+		if (state == State::PAUSED)
+		{
+
+		}
+		if (state == State::GAME_OVER)
+		{
+
+		}
+
+		window.display();
+
 	}
 
 

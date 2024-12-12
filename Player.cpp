@@ -3,8 +3,8 @@
 
 Player::Player()
 	: m_Speed(START_SPEED),
-	m_Health(START_HEALTH),
-	m_MaxHealth(START_HEALTH),
+	m_Health((int)START_HEALTH),
+	m_MaxHealth((int)START_HEALTH),
 	m_Texture(),
 	m_Sprite()
 {
@@ -14,12 +14,15 @@ Player::Player()
 	m_Sprite.setTexture(m_Texture);
 
 	m_Sprite.setOrigin(25, 25);
+
+	m_TileSize = 0;
+	m_LeftPressed = m_RightPressed = m_UpPressed = m_DownPressed = false;
 }
 
-void Player::spawn(sf::IntRect arena, sf::Vector2f resolution, int tileSize)
+void Player::spawn(sf::IntRect arena, sf::Vector2u resolution, int tileSize)
 {
-	m_Position.x = arena.width / 2;
-	m_Position.y = arena.height / 2;
+	m_Position.x = arena.width / 2.0f;
+	m_Position.y = arena.height / 2.0f;
 
 	m_Arena.left = arena.left;
 	m_Arena.width = arena.width;
@@ -28,15 +31,15 @@ void Player::spawn(sf::IntRect arena, sf::Vector2f resolution, int tileSize)
 
 	m_TileSize = tileSize;
 
-	m_Resolution.x = resolution.x;
-	m_Resolution.y = resolution.y;
+	m_Resolution.x = (float)resolution.x;
+	m_Resolution.y = (float)resolution.y;
 }
 
 void Player::resetPlayerStats()
 {
 	m_Speed = START_SPEED;
-	m_Health = START_HEALTH;
-	m_MaxHealth = START_HEALTH;
+	m_Health = (int)START_HEALTH;
+	m_MaxHealth = (int)START_HEALTH;
 
 }
 
@@ -140,22 +143,22 @@ void Player::update(float elapsedTime, sf::Vector2i mousePosition)
 
 	if (m_Position.x > m_Arena.width - m_TileSize)
 	{
-		m_Position.x = m_Arena.width - m_TileSize;
+		m_Position.x = (float)(m_Arena.width - m_TileSize);
 	}
 	if (m_Position.x < m_Arena.left + m_TileSize)
 	{
-		m_Position.x = m_Arena.left + m_TileSize;
+		m_Position.x = (float)(m_Arena.left + m_TileSize);
 	}
 	if (m_Position.y > m_Arena.height - m_TileSize)
 	{
-		m_Position.y = m_Arena.height - m_TileSize;
+		m_Position.y = (float)(m_Arena.height - m_TileSize);
 	}
 	if (m_Position.y < m_Arena.top + m_TileSize)
 	{
-		m_Position.y = m_Arena.top + m_TileSize;
+		m_Position.y = (float)(m_Arena.top + m_TileSize);
 	}
 
-	float angle = (atan2(mousePosition.y - m_Resolution.y / 2, mousePosition.x - m_Resolution.x / 2) * 180) / 3.141;
+	float angle = (atan2(mousePosition.y - m_Resolution.y / 2, mousePosition.x - m_Resolution.x / 2) * 180) / 3.141f;
 
 	m_Sprite.setRotation(angle);
 
@@ -168,7 +171,7 @@ void Player::upgradeSpeed()
 
 void Player::upgradeHealth()
 {
-	m_MaxHealth += (START_HEALTH * 0.2f);
+	m_MaxHealth += (int)(START_HEALTH * 0.2f);
 }
 
 void Player::increaseHealthLevel(int amount)
